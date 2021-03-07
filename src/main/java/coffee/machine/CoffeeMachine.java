@@ -1,6 +1,6 @@
 package coffee.machine;
 
-import coffee.Outlet;
+import threaded.coffee.Outlet;
 import coffee.recipe.Recipe;
 import lombok.Data;
 
@@ -15,26 +15,20 @@ public class CoffeeMachine {
     private HashMap<String, Integer> totalIngredients;
     private Integer outlets;
     private HashMap<String, State> ingredientStates;
-    private List<Outlet> spigots;
+
     /** REFILL INGREDIENTS **/
     public List<Response> refillIngredients(HashMap<String, Integer> ingredientRefillMap)
     {
         List<Response> responseList = new ArrayList<>();
         ingredientRefillMap.forEach((ingredient,quantity)->{
             Response response = new Response();
-            if(!this.totalIngredients.containsKey(ingredient)){
-                response.setState(State.FAILED);
-                response.setMessage(String.format(Constants.INGREDIENT_NOT_AVAILABLE,ingredient));
-            }
-            else
-            {   //adds quantity to current quantity of ingredient
-                this.totalIngredients.merge(ingredient,quantity,Integer::sum);
+           //adds quantity to current quantity of ingredient
+            this.totalIngredients.merge(ingredient,quantity,Integer::sum);
 
-                if(this.totalIngredients.get(ingredient).compareTo(Constants.INGREDIENT_THRESHOLD)>0)
-                    this.ingredientStates.put(ingredient,State.SUFFICIENT);
+            if(this.totalIngredients.get(ingredient).compareTo(Constants.INGREDIENT_THRESHOLD)>0)
+                this.ingredientStates.put(ingredient,State.SUFFICIENT);
 
-                response.setState(State.PROCESSED);
-            }
+            response.setState(State.PROCESSED);
             responseList.add(response);
         });
         return responseList;
@@ -95,6 +89,5 @@ public class CoffeeMachine {
         this.totalIngredients = totalIngredients;
         this.outlets = outlets;
         this.ingredientStates = new HashMap<>();
-        this.spigots = new ArrayList<Outlet>(outlets);
     }
 }

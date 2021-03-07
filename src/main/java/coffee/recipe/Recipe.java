@@ -17,4 +17,14 @@ public class Recipe {
     public Recipe() {
 
     }
+
+    /**
+     * Adds quantity 'q' of ingredient 'ingr' if 'ingr' present, else puts new entry
+     * @param ingr
+     * @param q
+     */
+    public void addIngredient(String ingr, Integer q)
+    {
+        this.ingredientMap.merge(ingr,q,Integer::sum);
+    }
 }
