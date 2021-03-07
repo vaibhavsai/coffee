@@ -27,7 +27,7 @@ public class Outlet extends Thread{
             HashMap<String, Integer> ingredientMap = recipe.getIngredientMap();
             for (Map.Entry<String, Integer> entry : ingredientMap.entrySet()) {
 
-                if (!ingredientRepository.getIngredientRepo().contains(entry.getKey())) {
+                if (!ingredientRepository.getIngredientRepo().containsKey(entry.getKey())) {
                     response.setState(coffee.machine.State.FAILED);
                     response.setMessage(String.format(Constants.BEVERAGE_INGREDIENT_NOT_AVAILABLE,recipe.getName(),entry.getKey()));
                     break;
@@ -39,6 +39,7 @@ public class Outlet extends Thread{
                     ingredientRepository.getIngredientRepo().merge(entry.getKey(), (-1 * entry.getValue()), Integer::sum);
                     String test = String.format(Constants.BEVERAGE_PREPARED,recipe.getName());
                     response.setMessage(test);
+                    response.setState(coffee.machine.State.PROCESSED);
                     if(ingredientRepository.getIngredientRepo().get(entry.getKey())<Constants.INGREDIENT_THRESHOLD)
                     {
                         ingredientRepository.getIngredientStates().put(entry.getKey(),coffee.machine.State.RUNNING_LOW);

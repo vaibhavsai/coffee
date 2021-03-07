@@ -32,6 +32,7 @@ public class ThreadedCoffeeMachine {
             outlets.forEach(outlet->{
                 if(!resultMap.contains(outlet.getId())||
                 !resultMap.get(outlet.getId()).getState().equals(State.BUSY)) {
+                    if(resultMap.get(Math.toIntExact(outlet.getId()))!=null)
                     responseList.add(resultMap.get(Math.toIntExact(outlet.getId())));
 //                    resultMap.put(Math.toIntExact(outlet.getId()),new Response());
                     outlet.run(recipe, this.ingredientRepository);
@@ -40,5 +41,4 @@ public class ThreadedCoffeeMachine {
         }
         return responseList;
     }
-
 }
