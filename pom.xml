@@ -11,32 +11,17 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<dropwizard.version>0.7.1</dropwizard.version>
 		<slf4j-api.version>1.7.10</slf4j-api.version>
 		<slf4j-simple.version>1.7.10</slf4j-simple.version>
 		<com.fasterxml.jackson.version>2.8.8</com.fasterxml.jackson.version>
-		<jetty.version>8.1.14.v20131031</jetty.version>
 		<junit.version>4.8.2</junit.version>
-		<google.guava.version>18.0</google.guava.version>
-		<dropwizard.guice.version>0.7.0.2</dropwizard.guice.version>
 		<swagger-version>0.5.3</swagger-version>
-		<data-source.version>${project.version}</data-source.version>
 		<mockito.version>1.10.19</mockito.version>
 		<lombok.version>1.16.2</lombok.version>
-		<datastore.version>${project.version}</datastore.version>
 		<mockito.version>1.10.19</mockito.version>
-		<guice.version>4.0</guice.version>
 		<json.version>20141113</json.version>
 		<joda-time.version>2.7</joda-time.version>
 		<validation-api.version>1.1.0.Final</validation-api.version>
-		<mysql-connector-java.version>5.1.34</mysql-connector-java.version>
-		<hibernate-entitymanager.version>4.3.0.Final</hibernate-entitymanager.version>
-		<hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
-		<guice-persist.version>3.0</guice-persist.version>
-		<hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
-		<snakeyaml.version>1.15</snakeyaml.version>
-		<httpclient.version>4.4.1</httpclient.version>
-		<jersey-apache-client4.version>1.19</jersey-apache-client4.version>
 	</properties>
 
 	<build>
@@ -170,19 +155,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.dropwizard</groupId>
-			<artifactId>dropwizard-testing</artifactId>
-			<version>${dropwizard.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>${validation-api.version}</version>
 		</dependency>
-
 	</dependencies>
-
-
 
 </project>

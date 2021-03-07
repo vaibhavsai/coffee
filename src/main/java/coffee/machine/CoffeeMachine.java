@@ -1,12 +1,14 @@
 package coffee.machine;
 
-import coffee.recipe.Beverage;
+import coffee.recipe.Recipe;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class CoffeeMachine {
 
     private HashMap<String, Integer> totalIngredients;
@@ -21,7 +23,7 @@ public class CoffeeMachine {
             Response response = new Response();
             if(!this.totalIngredients.containsKey(ingredient)){
                 response.setState(State.FAILED);
-                response.setMessage(String.format(Constants.INGREDIENT_NOT_FOUND,ingredient));
+                response.setMessage(String.format(Constants.INGREDIENT_NOT_AVAILABLE,ingredient));
             }
             else
             {   //adds quantity to current quantity of ingredient
@@ -38,36 +40,39 @@ public class CoffeeMachine {
     }
 
     /** POUR BEVERAGES **/
-    public List<Response> pour(List<Beverage> beverageList){
+    public List<Response> pour(List<Recipe> beverageList){
         List<Response> responseList = new ArrayList<>();
         Integer beverageCount = 0;
-        for (Beverage beverage: beverageList) {
+        for (Recipe recipe: beverageList) {
             if(beverageCount < outlets)
             {
-                HashMap<String, Integer> ingredientMap = beverage.getIngredientMap();
+                HashMap<String, Integer> ingredientMap = recipe.getIngredientMap();
                 Response response = new Response(State.PROCESSED);
                 for (Map.Entry<String, Integer> entry : ingredientMap.entrySet()) {
 
                     if (!this.totalIngredients.containsKey(entry.getKey())) {
                         response.setState(State.FAILED);
-                        response.setMessage(String.format(Constants.BEVERAGE_NOT_PREPARED,beverage.getName(),entry.getKey()));
+                        response.setMessage(String.format(Constants.BEVERAGE_INGREDIENT_NOT_AVAILABLE,recipe.getName(),entry.getKey()));
                         break;
                     } else if (this.totalIngredients.get(entry.getKey()).compareTo(entry.getValue()) < 0) {
                         response.setState(State.FAILED);
-                        response.setMessage(String.format(Constants.BEVERAGE_NOT_PREPARED,beverage.getName(),entry.getKey()));
+                        response.setMessage(String.format(Constants.BEVERAGE_INGREDIENT_NOT_SUFFICIENT,recipe.getName(),entry.getKey()));
                         break;
                     } else {
                         this.totalIngredients.merge(entry.getKey(), (-1 * entry.getValue()), Integer::sum);
+                        String test = String.format(Constants.BEVERAGE_PREPARED,recipe.getName());
+                        response.setMessage(test);
                         if(this.totalIngredients.get(entry.getKey())<Constants.INGREDIENT_THRESHOLD)
                         {
                             this.ingredientStates.put(entry.getKey(),State.RUNNING_LOW);
                         }
-                        response.setMessage(String.format(Constants.BEVERAGE_PREPARED,beverage.getName()));
                     }
-
                 }
                 responseList.add(response);
-                ++beverageCount;
+                if(response.getState().equals(State.PROCESSED))
+                {
+                    ++beverageCount;
+                }
             }
             else
             {
@@ -77,35 +82,9 @@ public class CoffeeMachine {
         return responseList;
     }
 
-    /** GETTERS AND SETTERS  **/
-
-    public HashMap<String, State> getIngredientStates() {
-        return ingredientStates;
-    }
-
-    public void setIngredientStates(HashMap<String, State> ingredientStates) {
-        this.ingredientStates = ingredientStates;
-    }
-
-
-    public CoffeeMachine(HashMap<String, Integer> totalIngredients, List<Response> responses, Integer outlets) {
+    public CoffeeMachine(HashMap<String, Integer> totalIngredients, Integer outlets) {
         this.totalIngredients = totalIngredients;
         this.outlets = outlets;
-    }
-
-    public HashMap<String, Integer> getTotalIngredients() {
-        return totalIngredients;
-    }
-
-    public void setTotalIngredients(HashMap<String, Integer> totalIngredients) {
-        this.totalIngredients = totalIngredients;
-    }
-
-    public Integer getOutlets() {
-        return outlets;
-    }
-
-    public void setOutlets(Integer outlets) {
-        this.outlets = outlets;
+        this.ingredientStates = new HashMap<>();
     }
 }
