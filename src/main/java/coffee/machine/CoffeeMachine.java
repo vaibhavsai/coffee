@@ -1,5 +1,6 @@
 package coffee.machine;
 
+import coffee.Outlet;
 import coffee.recipe.Recipe;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class CoffeeMachine {
     private HashMap<String, Integer> totalIngredients;
     private Integer outlets;
     private HashMap<String, State> ingredientStates;
-
+    private List<Outlet> spigots;
     /** REFILL INGREDIENTS **/
     public List<Response> refillIngredients(HashMap<String, Integer> ingredientRefillMap)
     {
@@ -40,6 +41,12 @@ public class CoffeeMachine {
     }
 
     /** POUR BEVERAGES **/
+    /**
+     * Parse list till we get 3 successes;
+     * assumption is that
+     * @param beverageList
+     * @return
+     */
     public List<Response> pour(List<Recipe> beverageList){
         List<Response> responseList = new ArrayList<>();
         Integer beverageCount = 0;
@@ -76,7 +83,9 @@ public class CoffeeMachine {
             }
             else
             {
-                break;
+                Response response = new Response(State.FAILED);
+                response.setMessage(Constants.OUTLETS_BUSY);
+                responseList.add(response);
             }
         }
         return responseList;
@@ -86,5 +95,6 @@ public class CoffeeMachine {
         this.totalIngredients = totalIngredients;
         this.outlets = outlets;
         this.ingredientStates = new HashMap<>();
+        this.spigots = new ArrayList<Outlet>(outlets);
     }
 }
